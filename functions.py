@@ -4,11 +4,14 @@ import keras
 import pickle
 import librosa
 
+from keras.models import load_model
+
 
 # model_file = open('model.pkl', 'rb')
 encoder_file = open('encoder.pkl', 'rb')
 
 # model = pickle.load(open('model.pkl', 'rb'))
+model = load_model('model.h5')
 encoder = pickle.load(encoder_file)
 
 # Function to extract MFCC features from audio

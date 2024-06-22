@@ -1,10 +1,15 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+import tensorflow as tf
+import keras
 
 from functions import generate_df, predict_result
 
 from st_audiorec import st_audiorec
+
+# st.write(tf.__version__)
+# st.write(keras.__version__)
 
 acting_script = pd.read_csv('acting-scripts.csv')
 
@@ -22,8 +27,8 @@ st.write("Emotion: ", st.session_state.rand_emotion)
 # audio_record = st_audiorec()
 audio_upload = st.file_uploader("Upload file")
 
-# if audio_record is not None:
-    # st.audio(audio_record, format='audio/wav')
+if audio_upload is not None:
+    st.audio(audio_upload, format='audio/wav')
 
 if audio_upload:
     predict = st.button("Proceed")
@@ -32,7 +37,7 @@ if audio_upload:
         #     df = generate_df(audio_record)
         df = generate_df(audio_upload)
         st.write(df)
-        # result = predict_result(df)
+        result = predict_result(df)
+        st.write("result: ", result)
 
-# st.write("result: ", result)
 
