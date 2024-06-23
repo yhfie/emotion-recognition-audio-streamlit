@@ -1,20 +1,23 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import tensorflow as tf
-import keras
+# import tensorflow as tf
+# import keras
+import librosa
 
 from functions import generate_df, predict_result
 
 from st_audiorec import st_audiorec
 
 # st.write(tf.__version__)
+# st.write(librosa.__version__)
 # st.write(keras.__version__)
 
 acting_script = pd.read_csv('acting-scripts.csv')
 
 # Initialize session state variables
-if 'rand_script' not in st.session_state:
+shuffle = st.button("Shuffle")
+if ('rand_script' not in st.session_state) or shuffle:
     acting_script = pd.read_csv('acting-scripts.csv')
     rand_row = acting_script.sample()
     st.session_state.rand_script = rand_row["script"].values[0]
@@ -23,6 +26,7 @@ if 'rand_script' not in st.session_state:
 # Use session state variables
 st.header(st.session_state.rand_script)
 st.write("Emotion: ", st.session_state.rand_emotion)
+
 
 # audio_record = st_audiorec()
 audio_upload = st.file_uploader("Upload file")

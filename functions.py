@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-import keras
+# import keras
 import pickle
 import librosa
 
@@ -28,11 +28,9 @@ def extract_features(data, sample_rate):
 
   # 4. zero crossing rate
   zcr = np.mean(librosa.feature.zero_crossing_rate(y=data, frame_length=2048, hop_length=512).T, axis=0)
-  # zcr = np.squeeze(zcr)
 
   # 5. RMSE
   rmse = np.mean(librosa.feature.rms(y=data, frame_length=2048, hop_length=512).T, axis=0)
-  # rmse = np.squeeze(rmse)
 
   features = np.hstack([mfcc, chroma_stft, mel, zcr, rmse])
 
