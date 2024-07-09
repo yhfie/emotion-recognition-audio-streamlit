@@ -51,7 +51,7 @@ if audio_upload:
 
 if audio_record:
     st.write("Your audio:")
-    st.audio(audio_record, format='audio/wav')
+    st.audio(audio_record)
     predict = st.button("Proceed")
     if predict:
         df = generate_df(audio_record)
