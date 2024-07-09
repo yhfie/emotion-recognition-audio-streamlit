@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 # import tensorflow as tf
 # import keras
+from st_audiorec import st_audiorec
 import librosa
 
 from functions import generate_df, predict_result
@@ -27,19 +28,33 @@ if ('rand_script' not in st.session_state) or shuffle:
 st.header(st.session_state.rand_script)
 st.write("Emotion: ", st.session_state.rand_emotion)
 
-
-# audio_record = st_audiorec()
+st.write("Record audio")
+audio_record = st_audiorec()
+st.write("or")
 audio_upload = st.file_uploader("Upload file")
 
-if audio_upload is not None:
-    st.audio(audio_upload, format='audio/wav')
+# if audio_upload is not None:
+#     st.audio(audio_upload, format='audio/wav')
+
+# if audio_record is not None:
+#     st.audio(audio_record, format='audio/wav')
 
 if audio_upload:
+    st.write("Your audio:")
+    st.audio(audio_upload, format='audio/wav')
     predict = st.button("Proceed")
     if predict:
-        # if audio_record:
-        #     df = generate_df(audio_record)
         df = generate_df(audio_upload)
+        st.write(df)
+        result = predict_result(df)
+        st.write("result: ", result)
+
+if audio_record:
+    st.write("Your audio:")
+    st.audio(audio_record, format='audio/wav')
+    predict = st.button("Proceed")
+    if predict:
+        df = generate_df(audio_record)
         st.write(df)
         result = predict_result(df)
         st.write("result: ", result)
