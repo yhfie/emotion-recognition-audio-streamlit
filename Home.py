@@ -33,7 +33,7 @@ st.subheader("Record audio")
 audio_record = st_audiorec()
 st.write("or")
 st.subheader("Upload audio")
-audio_upload = st.file_uploader("Upload file", type=['wav', 'm4a', 'mp3', 'flac'])
+audio_upload = st.file_uploader("Upload file", type=['wav', 'mp3', 'flac'])
 
 st.divider()
 
