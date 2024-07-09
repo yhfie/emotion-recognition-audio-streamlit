@@ -3,6 +3,7 @@ import numpy as np
 # import keras
 import pickle
 import librosa
+import streamlit as st
 
 from keras.models import load_model
 
@@ -19,6 +20,16 @@ def save_uploaded_file(uploaded_file):
     with open("temp_audio_file", "wb") as f:
         f.write(uploaded_file.getbuffer())
     return "temp_audio_file"
+
+# Function to process audio file
+def process_audio(file_path):
+    try:
+        df = generate_df(file_path)
+        st.write(df)
+        result = predict_result(df)
+        st.write("Result: ", result)
+    except Exception as e:
+        st.error(f"Error processing the audio file: {e}")
 
 # Function to extract MFCC features from audio
 def extract_features(data, sample_rate):

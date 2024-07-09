@@ -4,9 +4,10 @@ import numpy as np
 # import tensorflow as tf
 # import keras
 from st_audiorec import st_audiorec
-import librosa
+# import librosa
+import tempfile
 
-from functions import generate_df, predict_result, save_uploaded_file
+from functions import generate_df, predict_result, save_uploaded_file, process_audio
 
 from st_audiorec import st_audiorec
 
@@ -37,38 +38,26 @@ audio_upload = st.file_uploader("Upload file", type=['wav', 'mp3', 'flac'])
 
 st.divider()
 
+# Process uploaded file
 if audio_upload:
     st.write("Your audio:")
     st.audio(audio_upload, format='audio/wav')
     predict = st.button("Proceed")
     if predict:
-        try:
-            # Save the uploaded file temporarily
-            file_path = save_uploaded_file(audio_upload)
-            # Generate DataFrame and predict result
-            df = generate_df(file_path)
-            st.write(df)
-            result = predict_result(df)
-            st.write("Result: ", result)
-        except Exception as e:
-            st.error(f"Error processing the audio file: {e}")
+        with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+            temp_file.write(audio_upload.read())
+            temp_file_path = temp_file.name
+        process_audio(temp_file_path)
 
+# Process recorded audio
 if audio_record:
     st.write("Your audio:")
     st.audio(audio_record)
     predict = st.button("Proceed")
     if predict:
-            try:
-                # Save the recorded audio temporarily
-                file_path = "temp_audio_record.wav"
-                with open(file_path, "wb") as f:
-                    f.write(audio_record)
-                # Generate DataFrame and predict result
-                df = generate_df(file_path)
-                st.write(df)
-                result = predict_result(df)
-                st.write("Result: ", result)
-            except Exception as e:
-                st.error(f"Error processing the audio file: {e}")
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as temp_file:
+            temp_file.write(audio_record)
+            temp_file_path = temp_file.name
+        process_audio(temp_file_path)
 
 
