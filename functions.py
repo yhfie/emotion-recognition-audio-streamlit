@@ -14,6 +14,12 @@ encoder_file = open('encoder.pkl', 'rb')
 model = load_model('model.h5')
 encoder = pickle.load(encoder_file)
 
+# Function to save uploaded audio file
+def save_uploaded_file(uploaded_file):
+    with open("temp_audio_file", "wb") as f:
+        f.write(uploaded_file.getbuffer())
+    return "temp_audio_file"
+
 # Function to extract MFCC features from audio
 def extract_features(data, sample_rate):
   # 1. MFCC
@@ -35,6 +41,7 @@ def extract_features(data, sample_rate):
   features = np.hstack([mfcc, chroma_stft, mel, zcr, rmse])
 
   return features
+  
 
 # Function to load audio, extract features, and apply augmentations
 def get_features(path):

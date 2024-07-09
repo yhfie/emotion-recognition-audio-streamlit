@@ -6,7 +6,7 @@ import numpy as np
 from st_audiorec import st_audiorec
 import librosa
 
-from functions import generate_df, predict_result
+from functions import generate_df, predict_result, save_uploaded_file
 
 from st_audiorec import st_audiorec
 
@@ -37,21 +37,21 @@ audio_upload = st.file_uploader(" ")
 
 st.divider()
 
-# if audio_upload is not None:
-#     st.audio(audio_upload, format='audio/wav')
-
-# if audio_record is not None:
-#     st.audio(audio_record, format='audio/wav')
-
 if audio_upload:
     st.write("Your audio:")
     st.audio(audio_upload, format='audio/wav')
     predict = st.button("Proceed")
     if predict:
-        df = generate_df(audio_upload)
-        st.write(df)
-        result = predict_result(df)
-        st.write("result: ", result)
+        try:
+            # Save the uploaded file temporarily
+            file_path = save_uploaded_file(audio_upload)
+            # Generate DataFrame and predict result
+            df = generate_df(file_path)
+            st.write(df)
+            result = predict_result(df)
+            st.write("Result: ", result)
+        except Exception as e:
+            st.error(f"Error processing the audio file: {e}")
 
 if audio_record:
     st.write("Your audio:")
