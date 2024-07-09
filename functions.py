@@ -25,13 +25,12 @@ def save_uploaded_file(uploaded_file):
 def process_audio(file_path):
     try:
         df = generate_df(file_path)
-        st.write(df)
+        # st.write(df)
         result = predict_result(df)
         st.write("Result: ", result)
     except Exception as e:
         st.error(f"Error processing the audio file: {e}")
 
-# Function to extract MFCC features from audio
 def extract_features(data, sample_rate):
   # 1. MFCC
   mfcc = np.mean(librosa.feature.mfcc(y=data, sr=sample_rate, n_mfcc=40).T, axis=0)
@@ -53,8 +52,6 @@ def extract_features(data, sample_rate):
 
   return features
   
-
-# Function to load audio, extract features, and apply augmentations
 def get_features(path):
   data, sample_rate = librosa.load(path)
 
