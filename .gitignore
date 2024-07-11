@@ -177,3 +177,4 @@ pyrightconfig.json
 
 # End of https://www.toptal.com/developers/gitignore/api/python
 __pycache__/functions.cpython-311.pyc
+__pycache__/functions.cpython-311.pyc

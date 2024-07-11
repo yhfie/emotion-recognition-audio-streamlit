@@ -1,19 +1,19 @@
 import pandas as pd
 import numpy as np
-# import keras
 import pickle
 import librosa
 import streamlit as st
+import matplotlib.pyplot as plt
+# import keras
 
 from keras.models import load_model
+from sklearn.model_selection import train_test_split
 
-
-# model_file = open('model.pkl', 'rb')
-encoder_file = open('encoder.pkl', 'rb')
-
-# model = pickle.load(open('model.pkl', 'rb'))
-model = load_model('model.h5')
-encoder = pickle.load(encoder_file)
+model = load_model('pkl/model.h5')
+encoder = pickle.load(open('pkl/encoder.pkl', 'rb'))
+# history = pickle.load(open('history.pkl', 'rb'))
+with open('pkl/history.pkl', 'rb') as file:
+    history = pickle.load(file)
 
 # Function to save uploaded audio file
 def save_uploaded_file(uploaded_file):
@@ -27,9 +27,15 @@ def process_audio(file_path):
         df = generate_df(file_path)
         # st.write(df)
         result = predict_result(df)
-        st.write("Result: ", result)
+        return result
     except Exception as e:
         st.error(f"Error processing the audio file: {e}")
+
+def user_evaluation(predicted_emotion, target_emotion):
+    if predicted_emotion == target_emotion:
+        st.write("Congratulations! Your acting was perfect!")
+    else:
+        st.write("*comforting sentence here, please GPT*")
 
 def extract_features(data, sample_rate):
   # 1. MFCC
@@ -73,4 +79,34 @@ def generate_df(path):
 def predict_result(data):
     pred_test = model.predict(data)
     Y_pred = encoder.inverse_transform(pred_test)
-    return Y_pred
+    return Y_pred[0][0]
+
+def model_history():
+    st.write("Accuracy of our model on test data :",  86.21593117713928)
+    # Extract training history
+    train_acc = history['accuracy']
+    train_loss = history['loss']
+    test_acc = history['val_accuracy']
+    test_loss = history['val_loss']
+
+    epochs = np.arange(len(train_acc))
+
+    # Create the plots
+    fig, ax = plt.subplots(1, 2, figsize=(20, 6))
+
+    # Plot training and testing loss
+    ax[0].plot(epochs, train_loss, label='Training Loss')
+    ax[0].plot(epochs, test_loss, label='Testing Loss')
+    ax[0].set_title('Training & Testing Loss')
+    ax[0].legend()
+    ax[0].set_xlabel("Epochs")
+
+    # Plot training and testing accuracy
+    ax[1].plot(epochs, train_acc, label='Training Accuracy')
+    ax[1].plot(epochs, test_acc, label='Testing Accuracy')
+    ax[1].set_title('Training & Testing Accuracy')
+    ax[1].legend()
+    ax[1].set_xlabel("Epochs")
+
+    # Display the plots in Streamlit
+    st.pyplot(fig)

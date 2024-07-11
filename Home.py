@@ -1,27 +1,27 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-# import tensorflow as tf
-# import keras
 from st_audiorec import st_audiorec
-# import librosa
 import tempfile
 
-from functions import generate_df, predict_result, save_uploaded_file, process_audio
-
-from st_audiorec import st_audiorec
-
+# import tensorflow as tf
+# import keras
+# import librosa
 # st.write(tf.__version__)
 # st.write(librosa.__version__)
 # st.write(keras.__version__)
 
-acting_script = pd.read_csv('acting-scripts.csv')
+from functions import generate_df, predict_result, save_uploaded_file, process_audio, user_evaluation
+
+from st_audiorec import st_audiorec
+
+acting_script = pd.read_csv('csv/acting-scripts.csv')
 
 # Initialize session state variables
 shuffle = st.button("Shuffle")
 st.write("Act on following script and emotions!")
 if ('rand_script' not in st.session_state) or shuffle:
-    acting_script = pd.read_csv('acting-scripts.csv')
+    acting_script = pd.read_csv('csv/acting-scripts.csv')
     rand_row = acting_script.sample()
     st.session_state.rand_script = rand_row["script"].values[0]
     st.session_state.rand_emotion = rand_row["emotion"].values[0]
@@ -43,21 +43,30 @@ if audio_upload:
     st.write("Your audio:")
     st.audio(audio_upload, format='audio/wav')
     predict = st.button("Proceed")
+    st.divider()
     if predict:
         with tempfile.NamedTemporaryFile(delete=False) as temp_file:
             temp_file.write(audio_upload.read())
             temp_file_path = temp_file.name
-        process_audio(temp_file_path)
+        result = process_audio(temp_file_path)
+        st.write("Result:")
+        st.subheader(result)
+        user_evaluation(result, st.session_state.rand_emotion)
 
 # Process recorded audio
 if audio_record:
     st.write("Your audio:")
     st.audio(audio_record)
     predict = st.button("Proceed")
+    st.divider()
     if predict:
         with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as temp_file:
             temp_file.write(audio_record)
             temp_file_path = temp_file.name
-        process_audio(temp_file_path)
+        result = process_audio(temp_file_path)
+        st.write("Result:")
+        st.subheader(result)
+        user_evaluation(result, st.session_state.rand_emotion)
+        
 
 
