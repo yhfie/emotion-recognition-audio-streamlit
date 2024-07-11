@@ -35,7 +35,7 @@ def user_evaluation(predicted_emotion, target_emotion):
     if predicted_emotion == target_emotion:
         st.write("Congratulations! Your acting was perfect!")
     else:
-        st.write("*comforting sentence here, please GPT*")
+        st.write("Don't worry, with more practice, you'll master it! Keep going!")
 
 def extract_features(data, sample_rate):
   # 1. MFCC
